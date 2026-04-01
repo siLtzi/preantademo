@@ -1,0 +1,46 @@
+---
+const items = ['Brodeeraus', 'Tekstiilipaino', 'Tarrat', 'Banderollit', 'Ompelupalvelu', 'Pipot & pannat', 'Heijastinpipot', 'Profilointi'];
+const doubled = [...items, ...items];
+---
+
+<section class="marquee-section">
+  <div class="marquee-track">
+    {doubled.map(item => (
+      <span class="marquee-item">{item}</span>
+    ))}
+  </div>
+</section>
+
+<style>
+  .marquee-section {
+    background: var(--black);
+    padding: 1.25rem 0;
+    overflow: hidden;
+    position: relative;
+  }
+  .marquee-track {
+    display: flex;
+    animation: marquee 25s linear infinite;
+    width: max-content;
+  }
+  .marquee-item {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    white-space: nowrap;
+    padding: 0 2rem;
+    display: flex; align-items: center; gap: 2rem;
+  }
+  .marquee-item::after {
+    content: '◆';
+    font-size: 0.45rem;
+    color: var(--red);
+  }
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+</style>

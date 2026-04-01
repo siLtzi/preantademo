@@ -1,0 +1,132 @@
+---
+const arrowSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+
+const cards = [
+  { num: '01', title: 'Brodeeraus', desc: 'Laadukkaasti brodeerattu logo on kestävä ja pitkäikäinen. Päähineet, paidat, takit ja laukut.', cls: 'card-brodeeraus', img: '/brodeeraus.png' },
+  { num: '02', title: 'Tekstiilipaino', desc: 'Profiloi yrityksesi tai joukkueesi ammattitaidolla. Painatukset kaikkiin tekstiileihin.', cls: 'card-tekstiili', img: '/tekstiilipaino.png' },
+  { num: '03', title: 'Tarrat', desc: 'Auto-, peräkärry- ja ikkunatarrat. Pienet tai suuret, suunnittelemme yhdessä.', cls: 'card-tarrat', img: '/tarrat.png' },
+  { num: '04', title: 'Muut tuotteet', desc: 'Banderollit, ompelupalvelu, pipot, pannat ja putkihuivit. Vain mielikuvitus on rajana.', cls: 'card-muut', img: '/muut.png' },
+];
+---
+
+<section class="services" id="palvelut">
+  <div class="section-header reveal">
+    <div>
+      <span class="section-tag">Palvelut</span>
+      <h2 class="section-title">Kaikki painotyöt yhdeltä luukulta</h2>
+    </div>
+    <p class="section-desc">Saat meiltä monipuolisesti kaikki brodeeraus-, tekstiilipaino- ja tarratyöt. Työn jälki on meillä kunniassa.</p>
+  </div>
+
+  <div class="services-grid">
+    {cards.map((card, i) => (
+      <div class={`service-card ${card.cls} reveal reveal-delay-${i + 1}`}>
+        <img src={card.img} alt={card.title} class="service-card-img" />
+        <div class="service-card-arrow">
+          <Fragment set:html={arrowSvg} />
+        </div>
+        <div class="service-card-content">
+          <div class="service-card-num">{card.num}</div>
+          <h3 class="service-card-title">{card.title}</h3>
+          <p class="service-card-desc">{card.desc}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .services {
+    padding: 8rem 6rem;
+  }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+  .service-card {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--gray-100);
+    aspect-ratio: 3/4;
+    cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .service-card:hover {
+    transform: translateY(-8px);
+  }
+  .service-card-img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .service-card:hover .service-card-img {
+    transform: scale(1.05);
+  }
+  .service-card-content {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 2rem;
+    background: linear-gradient(to top, rgba(10,10,10,0.95), rgba(10,10,10,0.6) 60%, transparent);
+    color: white;
+    transform: translateY(2rem);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .service-card:hover .service-card-content {
+    transform: translateY(0);
+  }
+  .service-card-num {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--red-light);
+    margin-bottom: 0.5rem;
+  }
+  .service-card-title {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.02em;
+  }
+  .service-card-desc {
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.7);
+    opacity: 0;
+    transition: opacity 0.4s 0.1s;
+  }
+  .service-card:hover .service-card-desc {
+    opacity: 1;
+  }
+  .service-card-arrow {
+    position: absolute; top: 1.5rem; right: 1.5rem;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    transition: background 0.3s, transform 0.3s;
+    backdrop-filter: blur(10px);
+    z-index: 2;
+  }
+  .service-card:hover .service-card-arrow {
+    background: var(--red);
+    transform: rotate(-45deg);
+  }
+
+  /* Card base styles - images now cover background */
+  .card-brodeeraus, .card-tekstiili, .card-tarrat, .card-muut {
+    background: var(--black);
+  }
+  .card-muut { background: linear-gradient(135deg, #2e2a1a, #3d3316, #605014); }
+
+  @media (max-width: 1024px) {
+    .services { padding: 5rem 3rem; }
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .services { padding: 4rem 1.5rem; }
+    .services-grid { grid-template-columns: 1fr; }
+  }
+</style>

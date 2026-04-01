@@ -1,0 +1,119 @@
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand-name">
+        <img src="/PreantaOy-OULU-logo-206w.webp" alt="Preanta Oy" class="footer-logo-img" />
+      </div>
+      <p class="footer-brand-desc">Oululainen painoalan yritys. Brodeeraus-, tekstiilipaino- ja tarratyöt laadusta tinkimättä vuodesta 2004.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Palvelut</h4>
+      <a href="#">Brodeeraus</a>
+      <a href="#">Tekstiilipaino</a>
+      <a href="#">Tarrat</a>
+      <a href="#">Muut tuotteet</a>
+    </div>
+    <div class="footer-col">
+      <h4>Yritys</h4>
+      <a href="#">Meistä</a>
+      <a href="#">Yhteystiedot</a>
+      <a href="#">Aukioloajat</a>
+    </div>
+    <div class="footer-col">
+      <h4>Yhteystiedot</h4>
+      <a href="tel:0409628962">040 962 8962</a>
+      <a href="mailto:myynti@preanta.fi">myynti@preanta.fi</a>
+      <a href="#">Voudintie 8, 90400 Oulu</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2026 Preanta Oy · Y-tunnus 2720451-389</span>
+    <div class="footer-social">
+      <a href="#" aria-label="Facebook">f</a>
+      <a href="#" aria-label="Instagram">ig</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  footer {
+    background: var(--black);
+    color: white;
+    padding: 4rem 6rem 2rem;
+  }
+  .footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .footer-brand-name {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .footer-logo-img {
+    height: 32px;
+    width: auto;
+    display: block;
+  }
+  .footer-brand-desc {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.5);
+    max-width: 320px;
+  }
+  .footer-col h4 {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 1.25rem;
+  }
+  .footer-col a {
+    display: block;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    margin-bottom: 0.75rem;
+    transition: color 0.25s;
+  }
+  .footer-col a:hover { color: white; }
+  .footer-bottom {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 2rem;
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.35);
+  }
+  .footer-social {
+    display: flex; gap: 1rem;
+  }
+  .footer-social a {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: border-color 0.3s, color 0.3s, background 0.3s;
+  }
+  .footer-social a:hover {
+    border-color: var(--red);
+    color: white;
+    background: var(--red);
+  }
+
+  @media (max-width: 1024px) {
+    footer { padding: 3rem; }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 640px) {
+    footer { padding: 2rem 1.5rem; }
+    .footer-top { grid-template-columns: 1fr; }
+  }
+</style>

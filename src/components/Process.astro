@@ -1,0 +1,94 @@
+---
+const steps = [
+  { num: '1', title: 'Yhteydenotto', desc: 'Kerro meille mitä tarvitset. Soita, laita sähköpostia tai täytä lomake.' },
+  { num: '2', title: 'Suunnittelu', desc: 'Suunnittelemme yhdessä sinulle sopivan ratkaisun ja annamme tarjouksen.' },
+  { num: '3', title: 'Tuotanto', desc: 'Ammattilaisemme toteuttavat työn tarkalla laadunvalvonnalla.' },
+  { num: '4', title: 'Toimitus', desc: 'Valmiit tuotteet sinulle sovitun aikataulun mukaisesti.' },
+];
+---
+
+<section class="process" id="prosessi">
+  <div class="section-header reveal">
+    <div>
+      <span class="section-tag">Näin toimitaan</span>
+      <h2 class="section-title">Tilauksesta valmiiseen tuotteeseen</h2>
+    </div>
+    <p class="section-desc">Teemme tilaamisen helpoksi. Neljä selkeää vaihetta ideasta valmiiseen tuotteeseen.</p>
+  </div>
+  <div class="process-steps">
+    {steps.map((step, i) => (
+      <div class={`process-step reveal reveal-delay-${i + 1}`}>
+        <div class="process-step-num">{step.num}</div>
+        <h3>{step.title}</h3>
+        <p>{step.desc}</p>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .process {
+    padding: 8rem 6rem;
+    background: var(--gray-100);
+    position: relative;
+  }
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-top: 4rem;
+    position: relative;
+  }
+  .process-steps::before {
+    content: '';
+    position: absolute;
+    top: 40px;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+    background: var(--gray-200);
+  }
+  .process-step {
+    text-align: center;
+    padding: 0 2rem;
+    position: relative;
+  }
+  .process-step-num {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid var(--gray-200);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--red);
+    position: relative; z-index: 1;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .process-step:hover .process-step-num {
+    border-color: var(--red);
+    box-shadow: 0 0 0 6px rgba(217,48,37,0.1);
+  }
+  .process-step h3 {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+  }
+  .process-step p {
+    font-size: 0.875rem;
+    line-height: 1.65;
+    color: var(--gray-600);
+  }
+
+  @media (max-width: 1024px) {
+    .process { padding: 5rem 3rem; }
+    .process-steps { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+    .process-steps::before { display: none; }
+  }
+  @media (max-width: 640px) {
+    .process { padding: 4rem 1.5rem; }
+    .process-steps { grid-template-columns: 1fr; }
+  }
+</style>

@@ -1,0 +1,86 @@
+<nav id="nav">
+  <a href="#" class="nav-logo">
+    <img src="/PreantaOy-OULU-logo-206w.webp" alt="Preanta Oy" class="nav-logo-img" />
+  </a>
+  <div class="nav-links">
+    <a href="#palvelut">Palvelut</a>
+    <a href="#miksi">Miksi Preanta</a>
+    <a href="#prosessi">Näin toimitaan</a>
+    <a href="#yhteystiedot" class="nav-cta">Ota yhteyttä</a>
+  </div>
+</nav>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav?.classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const href = a.getAttribute('href');
+      if (href) {
+        const target = document.querySelector(href);
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+</script>
+
+<style>
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.25rem 3rem;
+    background: rgba(250,250,248,0.85);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.4s, background 0.4s;
+  }
+  nav.scrolled {
+    border-bottom-color: var(--gray-200);
+    background: rgba(250,250,248,0.95);
+  }
+  .nav-logo {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+    color: var(--black);
+    text-decoration: none;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .nav-logo-img {
+    height: 32px;
+    width: auto;
+    display: block;
+  }
+  .nav-links { display: flex; gap: 2rem; align-items: center; }
+  .nav-links a {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--gray-600);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: color 0.25s;
+  }
+  .nav-links a:hover { color: var(--black); }
+  .nav-cta {
+    background: var(--red) !important;
+    color: white !important;
+    padding: 0.6rem 1.4rem;
+    border-radius: 6px;
+    font-weight: 600 !important;
+    transition: background 0.25s, transform 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--red-dark) !important; transform: translateY(-1px); }
+
+  @media (max-width: 1024px) {
+    nav { padding: 1rem 1.5rem; }
+  }
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+  }
+</style>
