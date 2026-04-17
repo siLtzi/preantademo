@@ -1,26 +1,49 @@
 ---
+interface Props {
+  data?: any;
+}
+const { data } = Astro.props;
+
 const arrowSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
 
-const cards = [
-  { num: '01', title: 'Brodeeraus', desc: 'Laadukkaasti brodeerattu logo on kestävä ja pitkäikäinen. Päähineet, paidat, takit ja laukut.', cls: 'card-brodeeraus', img: '/brodeeraus.png' },
-  { num: '02', title: 'Tekstiilipaino', desc: 'Profiloi yrityksesi tai joukkueesi ammattitaidolla. Painatukset kaikkiin tekstiileihin.', cls: 'card-tekstiili', img: '/tekstiilipaino.png' },
-  { num: '03', title: 'Tarrat', desc: 'Auto-, peräkärry- ja ikkunatarrat. Pienet tai suuret, suunnittelemme yhdessä.', cls: 'card-tarrat', img: '/tarrat.png' },
-  { num: '04', title: 'Muut tuotteet', desc: 'Banderollit, ompelupalvelu, pipot, pannat ja putkihuivit. Vain mielikuvitus on rajana.', cls: 'card-muut', img: '/muut.png' },
+const tag = data?.servicesTag || 'Palvelut';
+const title = data?.servicesTitle || 'Kaikki painotyöt yhdeltä luukulta';
+const desc = data?.servicesDescription || 'Saat meiltä monipuolisesti kaikki brodeeraus-, tekstiilipaino- ja tarratyöt. Työn jälki on meillä kunniassa.';
+
+const defaultCards = [
+  { num: '01', title: 'Brodeeraus', description: 'Laadukkaasti brodeerattu logo on kestävä ja pitkäikäinen. Päähineet, paidat, takit ja laukut.', cls: 'card-brodeeraus', img: '/brodeeraus.png' },
+  { num: '02', title: 'Tekstiilipaino', description: 'Profiloi yrityksesi tai joukkueesi ammattitaidolla. Painatukset kaikkiin tekstiileihin.', cls: 'card-tekstiili', img: '/tekstiilipaino.png' },
+  { num: '03', title: 'Tarrat', description: 'Auto-, peräkärry- ja ikkunatarrat. Pienet tai suuret, suunnittelemme yhdessä.', cls: 'card-tarrat', img: '/tarrat.png' },
+  { num: '04', title: 'Muut tuotteet', description: 'Banderollit, ompelupalvelu, pipot, pannat ja putkihuivit. Vain mielikuvitus on rajana.', cls: 'card-muut', img: '/muut.png' },
 ];
+
+const clsMap = ['card-brodeeraus', 'card-tekstiili', 'card-tarrat', 'card-muut'];
+const slugMap = ['brodeeraus', 'tekstiilipaino', 'tarrat', 'muut-tuotteet'];
+
+const cards = data?.serviceCards?.length
+  ? data.serviceCards.map((c: any, i: number) => ({
+      num: c.num,
+      title: c.title,
+      desc: c.description,
+      cls: clsMap[i] || '',
+      img: c.image?.asset?.url || defaultCards[i]?.img || '',
+      slug: c.slug || slugMap[i] || '',
+    }))
+  : defaultCards.map((c, i) => ({ ...c, desc: c.description, slug: slugMap[i] }));
 ---
 
 <section class="services" id="palvelut">
   <div class="section-header reveal">
     <div>
-      <span class="section-tag">Palvelut</span>
-      <h2 class="section-title">Kaikki painotyöt yhdeltä luukulta</h2>
+      <span class="section-tag">{tag}</span>
+      <h2 class="section-title">{title}</h2>
     </div>
-    <p class="section-desc">Saat meiltä monipuolisesti kaikki brodeeraus-, tekstiilipaino- ja tarratyöt. Työn jälki on meillä kunniassa.</p>
+    <p class="section-desc">{desc}</p>
   </div>
 
   <div class="services-grid">
-    {cards.map((card, i) => (
-      <div class={`service-card ${card.cls} reveal reveal-delay-${i + 1}`}>
+    {cards.map((card: any, i: number) => (
+      <a href={`/palvelut/${card.slug}`} class={`service-card ${card.cls} reveal reveal-delay-${i + 1}`}>
         <img src={card.img} alt={card.title} class="service-card-img" />
         <div class="service-card-arrow">
           <Fragment set:html={arrowSvg} />
@@ -30,7 +53,7 @@ const cards = [
           <h3 class="service-card-title">{card.title}</h3>
           <p class="service-card-desc">{card.desc}</p>
         </div>
-      </div>
+      </a>
     ))}
   </div>
 </section>
@@ -52,6 +75,9 @@ const cards = [
     aspect-ratio: 3/4;
     cursor: pointer;
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    text-decoration: none;
+    color: inherit;
+    display: block;
   }
   .service-card:hover {
     transform: translateY(-8px);

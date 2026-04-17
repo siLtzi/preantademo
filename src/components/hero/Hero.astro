@@ -1,34 +1,54 @@
+---
+interface Props {
+  data?: any;
+}
+const { data } = Astro.props;
+
+const tag = data?.heroTag || 'Oulusta ympäri Suomen';
+const heading = data?.heroHeading || 'Brändisi ansaitsee *näkyä*';
+const description = data?.heroDescription || 'Brodeeraus, tekstiilipaino ja tarratyöt laadusta tinkimättä. Preanta Oy on oululainen painoalan ammattilainen — suunnittelusta valmiiseen tuotteeseen.';
+const ctaText = data?.heroCtaText || 'Kysy tarjous';
+const ctaLink = data?.heroCtaLink || '#yhteystiedot';
+const secondaryCtaText = data?.heroSecondaryCtaText || 'Tutustu palveluihin';
+const secondaryCtaLink = data?.heroSecondaryCtaLink || '#palvelut';
+const heroImageUrl = data?.heroImage?.asset?.url || '/hero321.png';
+const stats = data?.heroStats || [
+  { number: '10+', label: 'Vuotta kokemusta' },
+  { number: '1000+', label: 'Tyytyväistä asiakasta' },
+  { number: '100%', label: 'Kotimaista työtä' },
+];
+
+// Parse *word* to <em>word</em>
+function renderHeading(text: string) {
+  return text.replace(/\*(.+?)\*/g, '<em>$1</em>');
+}
+---
+
 <section class="hero">
   <div class="hero-content">
-    <span class="hero-tag">Oulusta ympäri Suomen</span>
-    <h1>Brändisi ansaitsee <em>näkyä</em></h1>
-    <p class="hero-desc">Brodeeraus, tekstiilipaino ja tarratyöt laadusta tinkimättä. Preanta Oy on oululainen painoalan ammattilainen — suunnittelusta valmiiseen tuotteeseen.</p>
+    <span class="hero-tag">{tag}</span>
+    <h1 set:html={renderHeading(heading)} />
+    <p class="hero-desc">{description}</p>
     <div class="hero-actions">
-      <a href="#yhteystiedot" class="btn-primary">
-        Kysy tarjous
+      <a href={ctaLink} class="btn-primary">
+        {ctaText}
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
-      <a href="#palvelut" class="btn-secondary">Tutustu palveluihin</a>
+      <a href={secondaryCtaLink} class="btn-secondary">{secondaryCtaText}</a>
     </div>
   </div>
   <div class="hero-visual">
-    <img src="/hero321.png" alt="Preanta Oy — brodeeraus ja painotyöt" class="hero-img" />
+    <img src={heroImageUrl} alt="Preanta Oy — brodeeraus ja painotyöt" class="hero-img" />
   </div>
 </section>
 
 <div class="hero-stats">
-  <div class="hero-stat">
-    <div class="hero-stat-num">10+</div>
-    <div class="hero-stat-label">Vuotta kokemusta</div>
-  </div>
-  <div class="hero-stat">
-    <div class="hero-stat-num">1000+</div>
-    <div class="hero-stat-label">Tyytyväistä asiakasta</div>
-  </div>
-  <div class="hero-stat">
-    <div class="hero-stat-num">100%</div>
-    <div class="hero-stat-label">Kotimaista työtä</div>
-  </div>
+  {stats.map((stat: any) => (
+    <div class="hero-stat">
+      <div class="hero-stat-num">{stat.number}</div>
+      <div class="hero-stat-label">{stat.label}</div>
+    </div>
+  ))}
 </div>
 
 <style>
@@ -64,7 +84,7 @@
     margin-bottom: 1.5rem;
     opacity: 0; animation: fadeUp 0.8s 0.5s forwards;
   }
-  .hero h1 em {
+  .hero h1 :global(em) {
     font-style: italic;
     color: var(--red);
   }

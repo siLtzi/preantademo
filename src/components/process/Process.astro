@@ -1,26 +1,37 @@
 ---
-const steps = [
-  { num: '1', title: 'Yhteydenotto', desc: 'Kerro meille mitä tarvitset. Soita, laita sähköpostia tai täytä lomake.' },
-  { num: '2', title: 'Suunnittelu', desc: 'Suunnittelemme yhdessä sinulle sopivan ratkaisun ja annamme tarjouksen.' },
-  { num: '3', title: 'Tuotanto', desc: 'Ammattilaisemme toteuttavat työn tarkalla laadunvalvonnalla.' },
-  { num: '4', title: 'Toimitus', desc: 'Valmiit tuotteet sinulle sovitun aikataulun mukaisesti.' },
+interface Props {
+  data?: any;
+}
+const { data } = Astro.props;
+
+const tag = data?.processTag || 'Näin toimitaan';
+const title = data?.processTitle || 'Tilauksesta valmiiseen tuotteeseen';
+const desc = data?.processDescription || 'Teemme tilaamisen helpoksi. Neljä selkeää vaihetta ideasta valmiiseen tuotteeseen.';
+
+const defaultSteps = [
+  { num: '1', title: 'Yhteydenotto', description: 'Kerro meille mitä tarvitset. Soita, laita sähköpostia tai täytä lomake.' },
+  { num: '2', title: 'Suunnittelu', description: 'Suunnittelemme yhdessä sinulle sopivan ratkaisun ja annamme tarjouksen.' },
+  { num: '3', title: 'Tuotanto', description: 'Ammattilaisemme toteuttavat työn tarkalla laadunvalvonnalla.' },
+  { num: '4', title: 'Toimitus', description: 'Valmiit tuotteet sinulle sovitun aikataulun mukaisesti.' },
 ];
+
+const steps = data?.processSteps?.length ? data.processSteps : defaultSteps;
 ---
 
 <section class="process" id="prosessi">
   <div class="section-header reveal">
     <div>
-      <span class="section-tag">Näin toimitaan</span>
-      <h2 class="section-title">Tilauksesta valmiiseen tuotteeseen</h2>
+      <span class="section-tag">{tag}</span>
+      <h2 class="section-title">{title}</h2>
     </div>
-    <p class="section-desc">Teemme tilaamisen helpoksi. Neljä selkeää vaihetta ideasta valmiiseen tuotteeseen.</p>
+    <p class="section-desc">{desc}</p>
   </div>
   <div class="process-steps">
-    {steps.map((step, i) => (
+    {steps.map((step: any, i: number) => (
       <div class={`process-step reveal reveal-delay-${i + 1}`}>
         <div class="process-step-num">{step.num}</div>
         <h3>{step.title}</h3>
-        <p>{step.desc}</p>
+        <p>{step.description}</p>
       </div>
     ))}
   </div>

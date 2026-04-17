@@ -1,0 +1,451 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/nav/Nav.astro';
+import Footer from '../components/footer/Footer.astro';
+import { loadQuery } from '../sanity/lib/load-query';
+import { siteSettingsQuery } from '../sanity/lib/queries';
+
+const settings = await loadQuery<any>({ query: siteSettingsQuery });
+
+const phone = settings?.phone || '040 962 8962';
+const email = settings?.email || 'myynti@preanta.fi';
+const address = settings?.address || 'Voudintie 8, 90400 Oulu';
+---
+
+<Layout>
+  <Nav settings={settings} />
+
+  <main class="contact-page">
+    <section class="contact-hero">
+      <div class="contact-hero-inner">
+        <span class="section-tag reveal">Yhteystiedot</span>
+        <h1 class="contact-title reveal">Kysy tarjous, <em>ota yhteyttä</em></h1>
+        <p class="contact-desc reveal reveal-delay-1">Kerro meille projektistasi — vastaamme yleensä saman päivän aikana. Tarjous on aina maksuton.</p>
+      </div>
+    </section>
+
+    <section class="contact-content">
+      <div class="contact-grid">
+        <!-- Form -->
+        <form class="contact-form reveal" action="/api/contact" method="POST" id="contact-form">
+          <div class="form-group">
+            <label for="name">Nimi <span class="required">*</span></label>
+            <input type="text" id="name" name="name" required autocomplete="name" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">Sähköposti <span class="required">*</span></label>
+              <input type="email" id="email" name="email" required autocomplete="email" />
+            </div>
+            <div class="form-group">
+              <label for="phone">Puhelin</label>
+              <input type="tel" id="phone" name="phone" autocomplete="tel" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="service">Palvelu</label>
+            <select id="service" name="service">
+              <option value="">Valitse palvelu...</option>
+              <option value="brodeeraus">Brodeeraus</option>
+              <option value="tekstiilipaino">Tekstiilipaino</option>
+              <option value="tarrat">Tarrat</option>
+              <option value="muut">Muut tuotteet ja ompelupalvelu</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="message">Viesti <span class="required">*</span></label>
+            <textarea id="message" name="message" rows="6" required></textarea>
+          </div>
+          <div class="form-group">
+            <label class="contact-method-label">Yhteydenotto mieluiten</label>
+            <div class="contact-method-options">
+              <label class="radio-label">
+                <input type="radio" name="contactMethod" value="email" checked />
+                <span>Sähköpostitse</span>
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="contactMethod" value="phone" />
+                <span>Puhelimitse</span>
+              </label>
+            </div>
+          </div>
+          <button type="submit" class="btn-primary">
+            Lähetä viesti
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+          <p class="form-note">* Pakolliset kentät</p>
+        </form>
+
+        <!-- Sidebar -->
+        <div class="contact-sidebar">
+          <div class="sidebar-card reveal reveal-delay-1">
+            <h3>Preanta Oy</h3>
+            <ul class="sidebar-list">
+              <li>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span>{address}</span>
+              </li>
+              <li>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                <a href={`tel:${phone.replace(/\s/g, '')}`}>{phone}</a>
+              </li>
+              <li>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <a href={`mailto:${email}`}>{email}</a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="sidebar-card reveal reveal-delay-2">
+            <h3>Aukioloajat</h3>
+            <ul class="hours-list">
+              <li>
+                <span class="day">Maanantai – Torstai</span>
+                <span class="time">08:00 – 16:00</span>
+              </li>
+              <li>
+                <span class="day">Perjantai</span>
+                <span class="time">08:00 – 15:00</span>
+              </li>
+              <li>
+                <span class="day">Lauantai – Sunnuntai</span>
+                <span class="time">Suljettu</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="sidebar-card sidebar-social reveal reveal-delay-3">
+            <h3>Seuraa meitä</h3>
+            <div class="social-links">
+              <a href="http://www.facebook.com/Preanta" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              </a>
+              <a href="https://www.instagram.com/preantaoy/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Map placeholder -->
+    <section class="contact-map reveal">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1643.5!2d25.4719!3d65.0124!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4681cd5154b45b5d%3A0x6e8e0b4e99e6e4df!2sVoudintie%208%2C%2090400%20Oulu!5e0!3m2!1sfi!2sfi!4v1"
+        width="100%"
+        height="400"
+        style="border:0;"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        title="Preanta Oy sijainti kartalla"
+      ></iframe>
+    </section>
+  </main>
+
+  <Footer settings={settings} />
+</Layout>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Simple client-side form handling
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = 'Lähetetään...';
+    btn.disabled = true;
+
+    // Build mailto fallback since there's no backend API yet
+    const formData = new FormData(form);
+    const name = formData.get('name');
+    const email = formData.get('email');
+    const phone = formData.get('phone');
+    const service = formData.get('service');
+    const message = formData.get('message');
+    const method = formData.get('contactMethod');
+
+    const subject = encodeURIComponent(`Yhteydenotto: ${service || 'Yleinen'}`);
+    const body = encodeURIComponent(
+      `Nimi: ${name}\nSähköposti: ${email}\nPuhelin: ${phone || '-'}\nPalvelu: ${service || '-'}\nYhteydenotto: ${method}\n\n${message}`
+    );
+
+    window.location.href = `mailto:myynti@preanta.fi?subject=${subject}&body=${body}`;
+
+    setTimeout(() => {
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+    }, 2000);
+  });
+</script>
+
+<style>
+  .contact-page {
+    padding-top: 5rem;
+  }
+
+  /* ── Hero ── */
+  .contact-hero {
+    padding: 6rem 6rem 3rem;
+    text-align: center;
+  }
+  .contact-hero-inner {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  .contact-title {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 5vw, 5rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+  }
+  .contact-title em {
+    font-style: italic;
+    color: var(--red);
+  }
+  .contact-desc {
+    font-size: 1.15rem;
+    line-height: 1.7;
+    color: var(--gray-600);
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  /* ── Content grid ── */
+  .contact-content {
+    padding: 3rem 6rem 6rem;
+  }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 3rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* ── Form ── */
+  .contact-form {
+    background: var(--gray-100);
+    border-radius: 20px;
+    padding: 3rem;
+    border: 1px solid var(--gray-200);
+  }
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--gray-800);
+  }
+  .required {
+    color: var(--red);
+  }
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 10px;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    background: white;
+    color: var(--black);
+    transition: border-color 0.25s, box-shadow 0.25s;
+    outline: none;
+  }
+  input:focus,
+  select:focus,
+  textarea:focus {
+    border-color: var(--red);
+    box-shadow: 0 0 0 3px rgba(217, 48, 37, 0.08);
+  }
+  textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+  select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235C5852' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+  }
+  .contact-method-label {
+    margin-bottom: 0.75rem;
+  }
+  .contact-method-options {
+    display: flex;
+    gap: 1.5rem;
+  }
+  .radio-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: var(--gray-600);
+    cursor: pointer;
+    margin-bottom: 0;
+  }
+  .radio-label input[type="radio"] {
+    width: auto;
+    accent-color: var(--red);
+  }
+  .form-note {
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    color: var(--gray-400);
+  }
+  .contact-form .btn-primary {
+    width: 100%;
+    justify-content: center;
+    padding: 1.1rem 2rem;
+    font-size: 1rem;
+  }
+
+  /* ── Sidebar ── */
+  .contact-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .sidebar-card {
+    background: var(--gray-100);
+    border-radius: 16px;
+    padding: 2rem;
+    border: 1px solid var(--gray-200);
+  }
+  .sidebar-card h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+    letter-spacing: -0.01em;
+  }
+  .sidebar-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+  .sidebar-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    color: var(--gray-600);
+  }
+  .sidebar-list li svg {
+    flex-shrink: 0;
+    color: var(--red);
+  }
+  .sidebar-list li a {
+    color: var(--black);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.25s;
+  }
+  .sidebar-list li a:hover {
+    color: var(--red);
+  }
+  .hours-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+  .hours-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid var(--gray-200);
+    font-size: 0.9rem;
+  }
+  .hours-list li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .day {
+    color: var(--gray-600);
+  }
+  .time {
+    font-weight: 600;
+    color: var(--black);
+  }
+
+  /* ── Social ── */
+  .social-links {
+    display: flex;
+    gap: 1rem;
+  }
+  .social-links a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: white;
+    border: 1px solid var(--gray-200);
+    color: var(--gray-600);
+    transition: color 0.25s, border-color 0.25s, background 0.25s;
+  }
+  .social-links a:hover {
+    color: var(--red);
+    border-color: var(--red);
+    background: rgba(217, 48, 37, 0.04);
+  }
+
+  /* ── Map ── */
+  .contact-map {
+    padding: 0 6rem 6rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .contact-map iframe {
+    border-radius: 20px;
+    display: block;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 1024px) {
+    .contact-hero { padding: 5rem 3rem 2rem; }
+    .contact-content { padding: 2rem 3rem 4rem; }
+    .contact-grid { grid-template-columns: 1fr; }
+    .contact-map { padding: 0 3rem 4rem; }
+  }
+  @media (max-width: 640px) {
+    .contact-hero { padding: 4rem 1.5rem 1.5rem; }
+    .contact-content { padding: 1.5rem 1.5rem 3rem; }
+    .contact-form { padding: 2rem 1.5rem; }
+    .form-row { grid-template-columns: 1fr; }
+    .contact-map { padding: 0 1.5rem 3rem; }
+  }
+</style>

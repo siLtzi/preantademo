@@ -1,36 +1,68 @@
+---
+interface Props {
+  settings?: any;
+}
+const { settings } = Astro.props;
+
+const logoUrl = settings?.logo?.asset?.url || '/PreantaOy-OULU-logo-206w.webp';
+const brandDesc = settings?.footerDescription || 'Oululainen painoalan yritys. Brodeeraus-, tekstiilipaino- ja tarratyöt laadusta tinkimättä vuodesta 2015.';
+const phone = settings?.phone || '040 962 8962';
+const email = settings?.email || 'myynti@preanta.fi';
+const address = settings?.address || 'Voudintie 8, 90400 Oulu';
+const copyright = settings?.copyrightText || '2026 Preanta Oy · Y-tunnus 2720451-389';
+const facebookUrl = settings?.facebookUrl || '#';
+const instagramUrl = settings?.instagramUrl || '#';
+
+const serviceLinks = settings?.footerServiceLinks?.length
+  ? settings.footerServiceLinks
+  : [
+    { label: 'Brodeeraus', href: '#' },
+    { label: 'Tekstiilipaino', href: '#' },
+    { label: 'Tarrat', href: '#' },
+    { label: 'Muut tuotteet', href: '#' },
+  ];
+
+const companyLinks = settings?.footerCompanyLinks?.length
+  ? settings.footerCompanyLinks
+  : [
+    { label: 'Meistä', href: '#' },
+    { label: 'Yhteystiedot', href: '#' },
+    { label: 'Aukioloajat', href: '#' },
+  ];
+---
+
 <footer>
   <div class="footer-top">
     <div>
       <div class="footer-brand-name">
-        <img src="/PreantaOy-OULU-logo-206w.webp" alt="Preanta Oy" class="footer-logo-img" />
+        <img src={logoUrl} alt="Preanta Oy" class="footer-logo-img" />
       </div>
-      <p class="footer-brand-desc">Oululainen painoalan yritys. Brodeeraus-, tekstiilipaino- ja tarratyöt laadusta tinkimättä vuodesta 2015.</p>
+      <p class="footer-brand-desc">{brandDesc}</p>
     </div>
     <div class="footer-col">
       <h4>Palvelut</h4>
-      <a href="#">Brodeeraus</a>
-      <a href="#">Tekstiilipaino</a>
-      <a href="#">Tarrat</a>
-      <a href="#">Muut tuotteet</a>
+      {serviceLinks.map((link: any) => (
+        <a href={link.href}>{link.label}</a>
+      ))}
     </div>
     <div class="footer-col">
       <h4>Yritys</h4>
-      <a href="#">Meistä</a>
-      <a href="#">Yhteystiedot</a>
-      <a href="#">Aukioloajat</a>
+      {companyLinks.map((link: any) => (
+        <a href={link.href}>{link.label}</a>
+      ))}
     </div>
     <div class="footer-col">
       <h4>Yhteystiedot</h4>
-      <a href="tel:0409628962">040 962 8962</a>
-      <a href="mailto:myynti@preanta.fi">myynti@preanta.fi</a>
-      <a href="#">Voudintie 8, 90400 Oulu</a>
+      <a href={`tel:${phone.replace(/\s/g, '')}`}>{phone}</a>
+      <a href={`mailto:${email}`}>{email}</a>
+      <a href="#">{address}</a>
     </div>
   </div>
   <div class="footer-bottom">
-    <span>&copy; 2026 Preanta Oy · Y-tunnus 2720451-389</span>
+    <span>&copy; {copyright}</span>
     <div class="footer-social">
-      <a href="#" aria-label="Facebook">f</a>
-      <a href="#" aria-label="Instagram">ig</a>
+      <a href={facebookUrl} aria-label="Facebook">f</a>
+      <a href={instagramUrl} aria-label="Instagram">ig</a>
     </div>
   </div>
 </footer>

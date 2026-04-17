@@ -1,12 +1,28 @@
+---
+interface Props {
+  settings?: any;
+}
+const { settings } = Astro.props;
+
+const logoUrl = settings?.logo?.asset?.url || '/PreantaOy-OULU-logo-206w.webp';
+const links = settings?.navLinks || [
+  { label: 'Palvelut', href: '#palvelut' },
+  { label: 'Miksi Preanta', href: '#miksi' },
+  { label: 'Näin toimitaan', href: '#prosessi' },
+];
+const ctaText = settings?.navCtaText || 'Ota yhteyttä';
+const ctaLink = settings?.navCtaLink || '#yhteystiedot';
+---
+
 <nav id="nav">
-  <a href="#" class="nav-logo">
-    <img src="/PreantaOy-OULU-logo-206w.webp" alt="Preanta Oy" class="nav-logo-img" />
+  <a href="/" class="nav-logo">
+    <img src={logoUrl} alt="Preanta Oy" class="nav-logo-img" />
   </a>
   <div class="nav-links">
-    <a href="#palvelut">Palvelut</a>
-    <a href="#miksi">Miksi Preanta</a>
-    <a href="#prosessi">Näin toimitaan</a>
-    <a href="#yhteystiedot" class="nav-cta">Ota yhteyttä</a>
+    {links.map((link: any) => (
+      <a href={link.href}>{link.label}</a>
+    ))}
+    <a href={ctaLink} class="nav-cta">{ctaText}</a>
   </div>
 </nav>
 

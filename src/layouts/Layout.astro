@@ -1,3 +1,18 @@
+---
+import SanityVisualEditing from '../components/SanityVisualEditing';
+import DisableDraftMode from '../components/DisableDraftMode';
+import { setServerCookies, isInDraftMode } from '../sanity/lib/draft-mode';
+import { perspectiveCookieName } from '@sanity/preview-url-secret/constants';
+
+const cookieObj: Record<string, string> = {};
+const perspectiveCookie = Astro.cookies.get(perspectiveCookieName);
+if (perspectiveCookie) {
+  cookieObj[perspectiveCookieName] = perspectiveCookie.value;
+}
+setServerCookies(cookieObj);
+
+const draftMode = isInDraftMode();
+---
 <!doctype html>
 <html lang="fi">
 	<head>
@@ -12,6 +27,8 @@
 	</head>
 	<body>
 		<slot />
+		{draftMode && <SanityVisualEditing client:only="react" />}
+		{draftMode && <DisableDraftMode client:only="react" />}
 	</body>
 </html>
 

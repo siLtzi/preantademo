@@ -1,5 +1,10 @@
 ---
-const items = ['Brodeeraus', 'Tekstiilipaino', 'Tarrat', 'Banderollit', 'Ompelupalvelu', 'Pipot & pannat', 'Heijastinpipot', 'Profilointi'];
+interface Props {
+  items?: string[];
+}
+const { items: propItems } = Astro.props;
+
+const items = propItems?.length ? propItems : ['Brodeeraus', 'Tekstiilipaino', 'Tarrat', 'Banderollit', 'Ompelupalvelu', 'Pipot & pannat', 'Heijastinpipot', 'Profilointi'];
 const doubled = [...items, ...items];
 ---
 

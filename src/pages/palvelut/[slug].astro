@@ -1,0 +1,582 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/nav/Nav.astro';
+import CTA from '../../components/cta/CTA.astro';
+import Footer from '../../components/footer/Footer.astro';
+import { loadQuery } from '../../sanity/lib/load-query';
+import { servicePageQuery, allServicePagesQuery, siteSettingsQuery, homepageQuery } from '../../sanity/lib/queries';
+
+const { slug } = Astro.params;
+
+const page = await loadQuery<any>({ query: servicePageQuery, params: { slug } });
+if (!page) return Astro.redirect('/');
+
+const settings = await loadQuery<any>({ query: siteSettingsQuery });
+const homepage = await loadQuery<any>({ query: homepageQuery });
+
+const pageTitle = page.seoTitle || `${page.title} — Preanta Oy | Oulu`;
+const pageDescription = page.seoDescription || page.shortDescription?.slice(0, 160);
+
+const arrowBackSvg = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>`;
+const checkSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>`;
+---
+
+<Layout>
+  <Fragment slot="head">
+    <title>{pageTitle}</title>
+    {pageDescription && <meta name="description" content={pageDescription} />}
+  </Fragment>
+  <Nav settings={settings} />
+
+  <main class="service-page">
+    <!-- Hero -->
+    <section class="sp-hero">
+      <div class="sp-hero-inner">
+        <a href="/#palvelut" class="sp-back">
+          <Fragment set:html={arrowBackSvg} />
+          <span>Kaikki palvelut</span>
+        </a>
+        {page.heroTagline && <span class="section-tag reveal">{page.heroTagline}</span>}
+        <h1 class="sp-hero-title reveal">{page.title}</h1>
+        <p class="sp-hero-desc reveal reveal-delay-1">{page.shortDescription}</p>
+        <a href="/yhteystiedot" class="btn-primary reveal reveal-delay-2">
+          {page.ctaText || 'Kysy tarjous'}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+      <div class="sp-hero-image reveal reveal-delay-2">
+        {page.heroImage?.asset?.url ? (
+          <img src={page.heroImage.asset.url} alt={page.title} />
+        ) : (
+          <div class="sp-hero-placeholder">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          </div>
+        )}
+      </div>
+    </section>
+
+    <!-- Intro section (text + image side by side) -->
+    {(page.introHeading || page.introText) && (
+      <section class="sp-intro">
+        <div class="sp-intro-grid">
+          <div class="sp-intro-text">
+            {page.introHeading && <h2 class="sp-intro-heading reveal">{page.introHeading}</h2>}
+            {page.introText && <p class="sp-intro-body reveal reveal-delay-1">{page.introText}</p>}
+            <a href="/yhteystiedot" class="btn-secondary reveal reveal-delay-2">
+              Ota yhteyttä
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+          <div class="sp-intro-image reveal reveal-delay-1">
+            {page.introImage?.asset?.url ? (
+              <img src={page.introImage.asset.url} alt={page.introHeading || page.title} />
+            ) : (
+              <div class="sp-image-placeholder">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- Features -->
+    {page.features?.length > 0 && (
+      <section class="sp-features">
+        <div class="section-header reveal">
+          <div>
+            <span class="section-tag">Ominaisuudet</span>
+            <h2 class="section-title">{page.featuresHeading || 'Mitä saat'}</h2>
+          </div>
+        </div>
+        <div class="sp-features-grid">
+          {page.features.map((f: any, i: number) => (
+            <div class={`sp-feature-card reveal reveal-delay-${(i % 4) + 1}`}>
+              <div class="sp-feature-icon">
+                <Fragment set:html={checkSvg} />
+              </div>
+              <h3>{f.title}</h3>
+              <p>{f.description}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Highlight banner (full-width image with overlay text) -->
+    {(page.highlightHeading || page.highlightImage?.asset?.url) && (
+      <section class="sp-highlight">
+        <div class="sp-highlight-inner">
+          {page.highlightImage?.asset?.url ? (
+            <img src={page.highlightImage.asset.url} alt={page.highlightHeading || page.title} class="sp-highlight-bg" />
+          ) : (
+            <div class="sp-highlight-bg sp-highlight-placeholder"></div>
+          )}
+          <div class="sp-highlight-overlay">
+            {page.highlightHeading && <h2 class="sp-highlight-title reveal">{page.highlightHeading}</h2>}
+            {page.highlightText && <p class="sp-highlight-text reveal reveal-delay-1">{page.highlightText}</p>}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- Process -->
+    {page.process?.length > 0 && (
+      <section class="sp-process">
+        <div class="section-header reveal">
+          <div>
+            <span class="section-tag">Työvaiheet</span>
+            <h2 class="section-title">Näin edetään</h2>
+          </div>
+        </div>
+        <div class="sp-process-steps">
+          {page.process.map((step: any, i: number) => (
+            <div class={`sp-step reveal reveal-delay-${(i % 4) + 1}`}>
+              <div class="sp-step-num">{String(i + 1).padStart(2, '0')}</div>
+              <h3>{step.title}</h3>
+              <p>{step.description}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Gallery -->
+    {page.gallery?.length > 0 && (
+      <section class="sp-gallery">
+        <div class="section-header reveal">
+          <div>
+            <span class="section-tag">Galleria</span>
+            <h2 class="section-title">Työnäytteitä</h2>
+          </div>
+        </div>
+        <div class="sp-gallery-grid">
+          {page.gallery.map((img: any, i: number) => (
+            <div class={`sp-gallery-item reveal reveal-delay-${(i % 4) + 1}`}>
+              <img src={img.asset?.url} alt={`${page.title} työnäyte ${i + 1}`} />
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Contact info & hours -->
+    <section class="sp-contact">
+      <div class="sp-contact-grid">
+        <div class="sp-contact-card reveal">
+          <h3>Yhteystiedot</h3>
+          <ul class="sp-contact-list">
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>{settings?.address || 'Voudintie 8, 90400 Oulu'}</span>
+            </li>
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <a href={`tel:${(settings?.phone || '040 962 8962').replace(/\s/g, '')}`}>{settings?.phone || '040 962 8962'}</a>
+            </li>
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <a href={`mailto:${settings?.email || 'myynti@preanta.fi'}`}>{settings?.email || 'myynti@preanta.fi'}</a>
+            </li>
+          </ul>
+        </div>
+        <div class="sp-contact-card reveal reveal-delay-1">
+          <h3>Aukioloajat</h3>
+          <ul class="sp-hours-list">
+            <li>
+              <span class="sp-day">Maanantai – Torstai</span>
+              <span class="sp-time">08:00 – 16:00</span>
+            </li>
+            <li>
+              <span class="sp-day">Perjantai</span>
+              <span class="sp-time">08:00 – 15:00</span>
+            </li>
+            <li>
+              <span class="sp-day">Lauantai – Sunnuntai</span>
+              <span class="sp-time">Suljettu</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <CTA data={homepage} settings={settings} />
+  <Footer settings={settings} />
+</Layout>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+<style>
+  .service-page {
+    padding-top: 5rem;
+  }
+
+  /* ── Hero ── */
+  .sp-hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    padding: 6rem 6rem 4rem;
+    min-height: 70vh;
+  }
+  .sp-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--gray-600);
+    text-decoration: none;
+    margin-bottom: 2rem;
+    transition: color 0.25s;
+  }
+  .sp-back:hover { color: var(--red); }
+  .sp-hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 5vw, 5rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+  }
+  .sp-hero-desc {
+    font-size: 1.15rem;
+    line-height: 1.7;
+    color: var(--gray-600);
+    max-width: 520px;
+    margin-bottom: 2.5rem;
+  }
+  .sp-hero-image {
+    border-radius: 20px;
+    overflow: hidden;
+    aspect-ratio: 4/3;
+    background: var(--gray-100);
+  }
+  .sp-hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .sp-hero-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-400);
+    background: var(--gray-100);
+  }
+
+  /* ── Intro ── */
+  .sp-intro {
+    padding: 6rem;
+    background: var(--white);
+  }
+  .sp-intro-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+  .sp-intro-heading {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 3vw, 3rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+  }
+  .sp-intro-body {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: var(--gray-600);
+    margin-bottom: 2rem;
+  }
+  .sp-intro-image {
+    border-radius: 20px;
+    overflow: hidden;
+    aspect-ratio: 4/3;
+    background: var(--gray-100);
+  }
+  .sp-intro-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .sp-image-placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-400);
+    background: var(--gray-100);
+    border-radius: 20px;
+  }
+
+  /* ── Features ── */
+  .sp-features {
+    padding: 6rem;
+    background: var(--gray-100);
+  }
+  .sp-features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+  .sp-feature-card {
+    background: white;
+    border-radius: 16px;
+    padding: 2.5rem;
+    border: 1px solid var(--gray-200);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .sp-feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+  }
+  .sp-feature-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(217,48,37,0.08);
+    color: var(--red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+  }
+  .sp-feature-card h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.01em;
+  }
+  .sp-feature-card p {
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: var(--gray-600);
+  }
+
+  /* ── Highlight Banner ── */
+  .sp-highlight {
+    padding: 0;
+  }
+  .sp-highlight-inner {
+    position: relative;
+    min-height: 400px;
+    overflow: hidden;
+  }
+  .sp-highlight-bg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
+    object-fit: cover;
+  }
+  .sp-highlight-placeholder {
+    background: linear-gradient(135deg, var(--black) 0%, #1a1a2e 100%);
+  }
+  .sp-highlight-overlay {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6rem;
+    min-height: 400px;
+    background: rgba(10, 10, 10, 0.65);
+    color: white;
+  }
+  .sp-highlight-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.25rem;
+    max-width: 700px;
+  }
+  .sp-highlight-text {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    max-width: 600px;
+    opacity: 0.85;
+  }
+
+  /* ── Process ── */
+  .sp-process {
+    padding: 6rem;
+  }
+  .sp-process-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+  .sp-step {
+    text-align: center;
+    padding: 2rem 1.5rem;
+  }
+  .sp-step-num {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    color: var(--red);
+    line-height: 1;
+    margin-bottom: 1.25rem;
+  }
+  .sp-step h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+  }
+  .sp-step p {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--gray-600);
+  }
+
+  /* ── Gallery ── */
+  .sp-gallery {
+    padding: 6rem;
+    background: var(--gray-100);
+  }
+  .sp-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+  .sp-gallery-item {
+    border-radius: 16px;
+    overflow: hidden;
+    aspect-ratio: 4/3;
+    background: var(--gray-200);
+  }
+  .sp-gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .sp-gallery-item:hover img {
+    transform: scale(1.05);
+  }
+
+  /* ── Contact & Hours ── */
+  .sp-contact {
+    padding: 6rem;
+  }
+  .sp-contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .sp-contact-card {
+    background: var(--gray-100);
+    border-radius: 16px;
+    padding: 2.5rem;
+    border: 1px solid var(--gray-200);
+  }
+  .sp-contact-card h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.01em;
+  }
+  .sp-contact-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  .sp-contact-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    color: var(--gray-600);
+  }
+  .sp-contact-list li svg {
+    flex-shrink: 0;
+    color: var(--red);
+  }
+  .sp-contact-list li a {
+    color: var(--black);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.25s;
+  }
+  .sp-contact-list li a:hover {
+    color: var(--red);
+  }
+  .sp-hours-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .sp-hours-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--gray-200);
+    font-size: 0.95rem;
+  }
+  .sp-hours-list li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .sp-day {
+    color: var(--gray-600);
+  }
+  .sp-time {
+    font-weight: 600;
+    color: var(--black);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 1024px) {
+    .sp-hero {
+      grid-template-columns: 1fr;
+      padding: 5rem 3rem 3rem;
+      min-height: auto;
+    }
+    .sp-intro { padding: 4rem 3rem; }
+    .sp-intro-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .sp-features, .sp-process, .sp-gallery, .sp-contact { padding: 4rem 3rem; }
+    .sp-process-steps { grid-template-columns: repeat(2, 1fr); }
+    .sp-gallery-grid { grid-template-columns: repeat(2, 1fr); }
+    .sp-highlight-overlay { padding: 4rem 3rem; }
+  }
+  @media (max-width: 640px) {
+    .sp-hero { padding: 4rem 1.5rem 2rem; }
+    .sp-intro { padding: 3rem 1.5rem; }
+    .sp-features, .sp-process, .sp-gallery, .sp-contact { padding: 3rem 1.5rem; }
+    .sp-features-grid { grid-template-columns: 1fr; }
+    .sp-process-steps { grid-template-columns: 1fr; }
+    .sp-gallery-grid { grid-template-columns: 1fr; }
+    .sp-contact-grid { grid-template-columns: 1fr; }
+    .sp-highlight-overlay { padding: 3rem 1.5rem; min-height: 300px; }
+  }
+</style>
